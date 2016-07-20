@@ -1,0 +1,1 @@
+require 'gyft/version'

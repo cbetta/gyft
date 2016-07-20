@@ -1,4 +1,4 @@
-class Gyft::Health
+class Gyft::Client::Health
 
   def initialize client
     @client = client
@@ -6,5 +6,8 @@ class Gyft::Health
 
   def check
     @client.get('/health/check')
+    true
+  rescue SocketError
+    false
   end
 end

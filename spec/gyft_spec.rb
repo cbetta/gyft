@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'webmock/minitest'
 require 'gyft'
 
-describe 'Gyft::Client' do
+describe 'Gyft::Reseller' do
 
   before do
     @client = Gyft::Client.new(api_key: '123', api_secret: '234')

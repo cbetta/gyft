@@ -281,6 +281,8 @@ Gyft::Refund {
 
 ### `POST /partner/purchase/gift_card_direct`
 
+Purchase a gift card returning a direct link to the card.
+
 ```rb
 > client.partner.purchase.gift_card_direct(
       to_email: 'customer@example.com',

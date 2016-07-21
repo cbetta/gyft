@@ -5,31 +5,31 @@ require 'json'
 module Gyft
   class Client
     class ServerError < StandardError; end
+    class NotFoundError < StandardError; end
+    class BadRequestError < StandardError; end
 
     ENDPOINTS = {
       'production' => 'api.gyft.com',
       'sandbox' => 'apitest.gyft.com'
     }
 
-    attr_accessor :api_key, :api_secret, :environment, :http
+    attr_accessor :api_key, :api_secret, :environment, :http, :reseller
 
     def initialize(options = {})
       @api_key = options.fetch(:api_key) do
-        ENV['GYFT_RESELLER_API_KEY'] ||
-        ArgumentError.new("Missing required argument: api_key")
+        ENV['GYFT_API_KEY'] || raise(KeyError, "Missing required argument: api_key")
       end
 
       @api_secret = options.fetch(:api_secret) do
-        ENV['GYFT_RESELLER_API_SECRET'] ||
-        ArgumentError.new("Missing required argument: api_secret")
+        ENV['GYFT_API_SECRET'] || raise(KeyError, "Missing required argument: api_secret")
       end
 
       @environment = begin
         environment = options.fetch(:environment) do
-          ENV['GYFT_RESELLER_API_ENVIRONMENT'] || 'sandbox'
+          ENV['GYFT_API_ENVIRONMENT'] || 'sandbox'
         end
         unless %w{production sandbox}.include?(environment)
-          raise ArgumentError.new("Invalid argument: environment should be one of 'production' or 'sandbox'")
+          raise(KeyError, "Invalid argument: environment should be one of 'production' or 'sandbox'")
         end
         environment
       end
@@ -47,7 +47,7 @@ module Gyft
     end
 
     def reseller
-      Gyft::Client::Reseller.new(self)
+      @reseller ||= Gyft::Client::Reseller.new(self)
     end
 
     def partner
@@ -94,6 +94,10 @@ module Gyft
       case response
       when Net::HTTPSuccess
         json?(response) ? JSON.parse(response.body) : response.body
+      when Net::HTTPNotFound
+        raise NotFoundError, "Record not found (404)"
+      when Net::HTTPBadRequest
+        raise BadRequestError, "Bad request (400)"
       else
         if json?(response)
           raise ServerError, "HTTP #{response.code}: #{JSON.parse(response.body)}"

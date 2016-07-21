@@ -22,14 +22,21 @@ class Gyft::Client::Reseller
     @client.get('/reseller/merchants')['details'].map do |merchant|
       merchant[:client] = @client
       merchant = Gyft::Merchant.new(merchant)
-      merchant.shop_cards = merchant.shop_cards.map do |card|
-        card[:client] = @client
-        Gyft::Card.new(card)
+
+      if merchant.shop_cards
+        merchant.shop_cards = merchant.shop_cards.map do |card|
+          card[:client] = @client
+          Gyft::Card.new(card)
+        end
       end
-      merchant.categories = merchant.categories.map do |category|
-        category[:client] = @client
-        Gyft::Category.new(category)
+
+      if merchant.categories
+        merchant.categories = merchant.categories.map do |category|
+          category[:client] = @client
+          Gyft::Category.new(category)
+        end
       end
+      
       merchant
     end
   end

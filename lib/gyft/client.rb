@@ -7,7 +7,8 @@ module Gyft
     class ServerError < StandardError; end
     class NotFoundError < StandardError; end
     class BadRequestError < StandardError; end
-
+    class UnauthorizedError < StandardError; end
+    
     ENDPOINTS = {
       'production' => 'api.gyft.com',
       'sandbox' => 'apitest.gyft.com'
@@ -98,6 +99,8 @@ module Gyft
         raise NotFoundError, "Record not found (404)"
       when Net::HTTPBadRequest
         raise BadRequestError, "Bad request (400)"
+      when Net::HTTPUnauthorized
+        raise UnauthorizedError, "Access Denied (401)"
       else
         if json?(response)
           raise ServerError, "HTTP #{response.code}: #{JSON.parse(response.body)}"

@@ -79,6 +79,15 @@ describe 'Gyft::Client' do
       result['details'].first['id'].must_equal 4
     end
 
+    it "should raise on 401" do
+      stub_request(:get, /apitest.gyft.com\/mashery\/v1\/reseller\/categories/).
+        to_return(:status => 401)
+
+      assert_raises Gyft::Client::UnauthorizedError do
+        @client.get('/reseller/categories')
+      end
+    end
+
     it "should raise on 404" do
       stub_request(:get, /apitest.gyft.com\/mashery\/v1\/reseller\/categories/).
         to_return(:status => 404)

@@ -4,8 +4,7 @@ require 'json'
 
 module Gyft
   class Client
-    class Error < StandardError; end
-    class ServerError < Error; end
+    class ServerError < StandardError; end
 
     ENDPOINTS = {
       'production' => 'api.gyft.com',
@@ -37,6 +36,10 @@ module Gyft
 
       @http = Net::HTTP.new(ENDPOINTS[environment], Net::HTTP.https_default_port)
       http.use_ssl = true
+    end
+
+    def cards
+      reseller.shop_cards
     end
 
     def health

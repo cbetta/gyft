@@ -6,23 +6,28 @@ class Gyft::Client::Reseller
 
   def shop_cards
     @client.get('/reseller/shop_cards').map do |card|
+      card[:client] = @client
       Gyft::Card.new(card)
     end
   end
 
   def categories
     @client.get('/reseller/categories')['details'].map do |category|
+      category[:client] = @client
       Gyft::Category.new(category)
     end
   end
 
   def merchants
     @client.get('/reseller/merchants')['details'].map do |merchant|
+      merchant[:client] = @client
       merchant = Gyft::Merchant.new(merchant)
       merchant.shop_cards = merchant.shop_cards.map do |card|
+        card[:client] = @client
         Gyft::Card.new(card)
       end
       merchant.categories = merchant.categories.map do |category|
+        category[:client] = @client
         Gyft::Category.new(category)
       end
       merchant
@@ -30,8 +35,9 @@ class Gyft::Client::Reseller
   end
 
   def account
-    result = @client.get('/reseller/account')
-    Gyft::Account.new(result)
+    account = @client.get('/reseller/account')
+    account[:client] = @client
+    Gyft::Account.new(account)
   end
 
   def transactions

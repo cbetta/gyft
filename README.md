@@ -38,14 +38,34 @@ The client provides with direct access to every API call as documented in the de
 
 ```rb
 # get a card to purchase
-card = client.reseller.shop_cards.first
+card = client.cards.first
 # purchase the card for someone
-transaction = card.purchase(to_email: 'customer@example.com', shop_card_id: 1234)
+transaction = card.purchase(to_email: 'customer@example.com')
 # load more details on the transaction
 transaction = transaction.reload
 # refund the transaction
 transaction.refund
 ```
+
+## Convenience methods
+
+### `client.cards`
+
+Maps to `client.reseller.shop_cards`, allows for easier access and a less verbose DSL.
+
+### `card.purchase`
+
+Maps to `client.partner.purchase.gift_card_direct` and passes along all the same parameters while automatically setting the `shop_card_id`.
+
+### `transaction.reload`
+
+The purchase method returns an incomplete transaction object. This convenience methods
+calls `client.reseller.transaction.find` passing along the transaction `id` and returns a
+new `Gyft::Transaction` object.
+
+### `transaction.refund`
+
+Maps to `client.reseller.transactions.refund` and automatically passes along the transaction `id`.
 
 ## API
 
@@ -271,3 +291,21 @@ Gyft::Transaction {
     :url => "https://staging.gyft.com/card/#/?c=...."
 }
 ```
+
+## Contributing
+
+ 1. **Fork** the repo on GitHub
+ 2. **Clone** the project to your own machine
+ 3. **Commit** changes to your own branch
+ 4. **Push** your work back up to your fork
+ 5. Submit a **Pull request** so that we can review your changes
+
+### Development
+
+* `bundle install` to get dependencies
+* `rake` to run tests
+* `rake console` to run a local console with the library loaded
+
+## License
+
+This library is released under the [MIT License](LICENSE).

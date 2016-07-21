@@ -11,8 +11,11 @@ class Gyft::Client::Partner
     params = symbolize(params)
     options = extract(params, :to_email, :shop_card_id)
     options = merge(options, params, :reseller_reference, :notes, :first_name, :last_name, :gender, :birthday)
-    result = @client.post("/partner/purchase/gift_card_direct", options)
-    Gyft::Transaction.new(result)
+
+    transaction = @client.post("/partner/purchase/gift_card_direct", options)
+    
+    transaction[:client] = @client
+    Gyft::Transaction.new(transaction)
   end
 
   private

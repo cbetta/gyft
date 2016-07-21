@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/gyft.svg)](https://badge.fury.io/rb/gyft) [![Build Status](https://travis-ci.org/cbetta/gyft.svg?branch=master)](https://travis-ci.org/cbetta/gyft)
 
-A wrapper for the [Gyft API](http://developer.gyft.com). Specification as per the [developer documentation](http://developer.gyft.com/io-docs).
+A wrapper for the [Gyft API](http://developer.gyft.com). Specification is as described in the the [developer documentation](http://developer.gyft.com/io-docs).
 
 ## Installation
 
@@ -15,7 +15,7 @@ gem 'gyft'
 ## Getting started
 
 The client will accept the API key and secret either as parameters on initialization,
-or as environment variables. Additionally an `environment` can be set to either
+or as environment variables. Additionally an `environment` parameter can be set to either
 `sandbox` (default) or `production`.
 
 ```rb
@@ -24,17 +24,15 @@ require 'gyft'
 # using parameters
 client = Gyft::Client.new(api_key: '...', api_secret: '...', environment: 'production')
 
-# using these environment variables are set:
+# using environment variables:
 # * GYFT_RESELLER_API_KEY
 # * GYFT_RESELLER_API_SECRET
 # * GYFT_RESELLER_API_ENVIRONMENT
 client = Gyft::Client.new
-
-# now you are ready for your first API call
-client.reseller.shop_cards # => [#<Gyft::Card id=123, merchant_id="123", ...>, ...]
 ```
 
-The client provides with direct access to every API call as documented in the developer documentation. Additionally it also provides some convenience methods.
+The client provides with direct access to every API call as documented in the
+developer documentation. Additionally it also provides some convenience methods.
 
 ```rb
 # get a card to purchase
@@ -51,25 +49,28 @@ transaction.refund
 
 ### `client.cards`
 
-Maps to `client.reseller.shop_cards`, allows for easier access and a less verbose DSL.
+Maps to `client.reseller.shop_cards`, allows for easier access and a less
+verbose DSL.
 
 ### `card.purchase`
 
-Maps to `client.partner.purchase.gift_card_direct` and passes along all the same parameters while automatically setting the `shop_card_id`.
+Maps to `client.partner.purchase.gift_card_direct` and passes along all the
+same parameters while automatically setting the `shop_card_id`.
 
 ### `transaction.reload`
 
-The purchase method returns an incomplete transaction object. This convenience methods
-calls `client.reseller.transaction.find` passing along the transaction `id` and returns a
-new `Gyft::Transaction` object.
+The purchase method returns an incomplete transaction object. This convenience
+methods calls `client.reseller.transaction.find` passing along the transaction
+`id` and returning a new `Gyft::Transaction` object.
 
 ### `transaction.refund`
 
-Maps to `client.reseller.transactions.refund` and automatically passes along the transaction `id`.
+Maps to `client.reseller.transactions.refund` and automatically passes along
+the transaction `id`.
 
 ## API
 
-### GET /health/check
+### `GET /health/check`
 
 ```rb
 # with a connection
@@ -81,7 +82,7 @@ true
 false
 ```
 
-### GET /reseller/shop_cards
+### `GET /reseller/shop_cards`
 
 Returns the shop cards available for purchase.
 
@@ -102,7 +103,7 @@ Gyft::Card {
 }
 ```
 
-### GET /reseller/categories
+### `GET /reseller/categories`
 
 Returns all of the categories.
 
@@ -116,7 +117,7 @@ Gyft::Category {
 }
 ```
 
-### GET /reseller/merchants
+### `GET /reseller/merchants`
 
 Returns all of the merchants.
 
@@ -169,7 +170,7 @@ Gyft::Merchant {
 }
 ```
 
-### GET /reseller/account
+### `GET /reseller/account`
 
 Returns details of the reseller's account.
 
@@ -189,7 +190,7 @@ Gyft::Account {
 }
 ```
 
-### GET /reseller/transactions
+### `GET /reseller/transactions`
 
 Returns a list of all the transactions for the reseller.
 
@@ -205,7 +206,7 @@ Gyft::Transaction {
 }
 ```
 
-### GET /transactions/last/:number_of_records
+### `GET /transactions/last/:number_of_records`
 
 Returns a limited list of recent transactions for the reseller.
 
@@ -221,7 +222,7 @@ Gyft::Transaction {
 }
 ```
 
-### GET /transactions/first/:number_of_records
+### `GET /transactions/first/:number_of_records`
 
 Returns a limited list of initial transactions for the reseller.
 
@@ -237,7 +238,7 @@ Gyft::Transaction {
 }
 ```
 
-### GET /transaction/:id
+### `GET /transaction/:id`
 
 Returns a full details for a sent transaction
 
@@ -258,7 +259,7 @@ Gyft::Transaction {
 }
 ```
 
-### POST /transaction/refund
+### `POST /transaction/refund`
 
 Refund transaction and get card details.
 
@@ -278,7 +279,7 @@ Gyft::Refund {
 }
 ```
 
-### POST /partner/purchase/gift_card_direct
+### `POST /partner/purchase/gift_card_direct`
 
 ```rb
 > client.partner.purchase.gift_card_direct(

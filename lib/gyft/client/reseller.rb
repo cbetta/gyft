@@ -1,6 +1,3 @@
-
-require 'awesome_print'
-
 class Gyft::Client::Reseller
 
   def initialize client
@@ -37,33 +34,11 @@ class Gyft::Client::Reseller
     Gyft::Account.new(result)
   end
 
-  def transactions options = {}
-    path = transactions_path_for(options)
-
-    @client.get(path).map do |transaction|
-      Gyft::Transaction.new(transaction)
-    end
+  def transactions
+    Gyft::Client::Transactions.new(@client)
   end
 
-  def transaction id
-    result = @client.get("/reseller/transaction/#{id}")
-    Gyft::Transaction.new(result)
-  end
-
-  private
-
-  def transactions_path_for(options)
-    last = options[:last]
-    first = options[:first]
-
-    path = begin
-      if last && last > 0
-        "/reseller/transactions/last/#{last}"
-      elsif first && first > 0
-        "/reseller/transactions/first/#{first}"
-      else
-        '/reseller/transactions'
-      end
-    end
+  def transaction
+    Gyft::Client::Transactions.new(@client)
   end
 end

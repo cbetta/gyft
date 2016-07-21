@@ -34,6 +34,19 @@ client = Gyft::Client.new
 client.reseller.shop_cards # => [#<Gyft::Card id=123, merchant_id="123", ...>, ...]
 ```
 
+The client provides with direct access to every API call as documented in the developer documentation. Additionally it also provides some convenience methods.
+
+```rb
+# get a card to purchase
+card = client.reseller.shop_cards.first
+# purchase the card for someone
+transaction = card.purchase(to_email: 'customer@example.com', shop_card_id: 1234)
+# load more details on the transaction
+transaction = transaction.reload
+# refund the transaction
+transaction.refund
+```
+
 ## API
 
 ### GET /health/check
@@ -161,7 +174,7 @@ Gyft::Account {
 Returns a list of all the transactions for the reseller.
 
 ```rb
-> transactions = client.reseller.transactions
+> transactions = client.reseller.transactions.all
 [#<Gyft::Transaction id=123, type=1, amount=25.0, created_when=1469034701000>, ...]
 > transactions.first
 Gyft::Transaction {
@@ -177,7 +190,7 @@ Gyft::Transaction {
 Returns a limited list of recent transactions for the reseller.
 
 ```rb
-> transactions = client.reseller.transactions(last: 1)
+> transactions = client.reseller.transactions.last(1)
 [#<Gyft::Transaction id=123, type=1, amount=25.0, created_when=1469034701000>]
 > transactions.first
 Gyft::Transaction {
@@ -193,7 +206,7 @@ Gyft::Transaction {
 Returns a limited list of initial transactions for the reseller.
 
 ```rb
-> transactions = client.reseller.transactions(first: 1)
+> transactions = client.reseller.transactions.first(1)
 [#<Gyft::Transaction id=122, type=1, amount=25.0, created_when=1469034701000>]
 > transactions.first
 Gyft::Transaction {
@@ -209,7 +222,7 @@ Gyft::Transaction {
 Returns a full details for a sent transaction
 
 ```rb
-> client.transaction(123)
+> client.transactions.find(123)
 Gyft::Transaction {
                      :id => 123,
           :merchant_name => "Grotto",
@@ -222,5 +235,39 @@ Gyft::Transaction {
             :card_status => 0,
     :transaction_created => 1469034701000,
            :gift_created => 1469034701000
+}
+```
+
+### POST /transaction/refund
+
+Refund transaction and get card details.
+
+```rb
+> client.transactions.refund(123)
+Gyft::Refund {
+                            :id => "OTlkOGM1...k5W",
+                        :status => 0,
+
+                :gf_reseller_id => "abc123",
+    :gf_reseller_transaction_id => 123333,
+                         :email => "client@example.com",
+                   :gf_order_id => 123456,
+            :gf_order_detail_id => 345678,
+             :gf_gyfted_card_id => 678997,
+                   :invalidated => false
+}
+```
+
+### POST /partner/purchase/gift_card_direct
+
+```rb
+> client.partner.purchase.gift_card_direct(
+      to_email: 'customer@example.com',
+      shop_card_id: 1234
+  )
+
+Gyft::Transaction {
+     :id => 1250483,
+    :url => "https://staging.gyft.com/card/#/?c=...."
 }
 ```

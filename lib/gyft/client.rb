@@ -47,11 +47,21 @@ module Gyft
       Gyft::Client::Reseller.new(self)
     end
 
-    def get(path, params = {}, headers = {})
-      uri, timestamp = uri_for(path, params)
+    def partner
+      Gyft::Client::Partner.new(self)
+    end
+
+    def get(path)
+      uri, timestamp = uri_for(path)
       message = Net::HTTP::Get.new(uri.request_uri)
       message['x-sig-timestamp'] = timestamp
-      headers.each { |key, value| message[key] = value }
+      transmit(message)
+    end
+
+    def post(path, params = {})
+      uri, timestamp = uri_for(path, params)
+      message = Net::HTTP::Post.new(uri.request_uri)
+      message['x-sig-timestamp'] = timestamp
       transmit(message)
     end
 
@@ -60,10 +70,10 @@ module Gyft
     def uri_for(path, params = {})
       uri = URI("https://#{ENDPOINTS[environment]}/mashery/v1#{path}")
       sig, timestamp = signature
-      uri.query = URI.encode_www_form({
+      uri.query = URI.encode_www_form(params.merge({
         api_key: api_key,
         sig: sig
-      })
+      }))
       [uri, timestamp]
     end
 

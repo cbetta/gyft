@@ -25,9 +25,9 @@ require 'gyft'
 client = Gyft::Client.new(api_key: '...', api_secret: '...', environment: 'production')
 
 # using environment variables:
-# * GYFT_RESELLER_API_KEY
-# * GYFT_RESELLER_API_SECRET
-# * GYFT_RESELLER_API_ENVIRONMENT
+# * GYFT_API_KEY
+# * GYFT_API_SECRET
+# * GYFT_API_ENVIRONMENT
 client = Gyft::Client.new
 ```
 

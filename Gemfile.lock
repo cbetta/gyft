@@ -6,11 +6,13 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.4.0)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     hashdiff (0.3.0)
     minitest (5.9.0)
+    public_suffix (4.0.6)
     rake (11.2.2)
     safe_yaml (1.0.4)
     webmock (2.1.0)

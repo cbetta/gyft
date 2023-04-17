@@ -11,7 +11,7 @@ GEM
       safe_yaml (~> 1.0.0)
     hashdiff (0.3.0)
     minitest (5.9.0)
-    rake (11.2.2)
+    rake (13.0.6)
     safe_yaml (1.0.4)
     webmock (2.1.0)
       addressable (>= 2.3.6)
